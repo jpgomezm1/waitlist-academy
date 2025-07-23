@@ -1,1 +1,7 @@
 project_id = "qdccqwdrnkuzgqbttlgn"
+
+[functions.handle-referral]
+verify_jwt = false
+
+[functions.get-referral-data]
+verify_jwt = false
