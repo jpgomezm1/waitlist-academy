@@ -4,7 +4,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Sparkles, Users, Crown } from 'lucide-react';
+import { Sparkles, Crown, FileText, Mail, Percent } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const LandingPage = () => {
   const [email, setEmail] = useState('');
@@ -81,30 +82,63 @@ const LandingPage = () => {
             <span className="text-accent">Empieza a Crear</span>{' '}
             con IA.
           </h1>
-          <p className="text-xl md:text-2xl text-foreground/80 max-w-xl mx-auto leading-relaxed">
-            Únete al <strong className="text-accent">Círculo Interno de Fundadores</strong> y 
-            desbloquea recompensas exclusivas invitando a tus amigos.
+          <p className="text-lg md:text-xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
+            La IA no te reemplazará, pero sí quien la use para crear. Únete al <strong className="text-accent">Círculo Interno de Fundadores</strong> y obtén el método para construir soluciones, automatizar tu trabajo y volverte indispensable. Desbloquea recompensas exclusivas por ser pionero.
           </p>
         </div>
 
         {/* Rewards Preview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-          <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-4">
-            <Users className="w-8 h-8 text-accent mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-foreground">1 Amigo</h3>
-            <p className="text-sm text-foreground/70">Descuento 10%</p>
+        <TooltipProvider>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-4xl mx-auto">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-3 cursor-pointer hover:bg-card/20 transition-colors">
+                  <FileText className="w-6 h-6 text-accent mx-auto mb-1" />
+                  <h3 className="text-sm font-semibold text-foreground">1 Amigo: PDF Esencial</h3>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Acceso inmediato al PDF '50 Prompts Esenciales'</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-3 cursor-pointer hover:bg-card/20 transition-colors">
+                  <Mail className="w-6 h-6 text-accent mx-auto mb-1" />
+                  <h3 className="text-sm font-semibold text-foreground">3 Amigos: Mini-Curso</h3>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Un curso exclusivo por correo con lecciones accionables</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-3 cursor-pointer hover:bg-card/20 transition-colors">
+                  <Percent className="w-6 h-6 text-accent mx-auto mb-1" />
+                  <h3 className="text-sm font-semibold text-foreground">5 Amigos: 50% DTO. Vitalicio</h3>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Medio precio en tu suscripción a la academia, para siempre</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-3 cursor-pointer hover:bg-card/20 transition-colors">
+                  <Crown className="w-6 h-6 text-accent mx-auto mb-1" />
+                  <h3 className="text-sm font-semibold text-foreground">10 Amigos: Acceso Anual GRATIS</h3>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Un año de acceso total a la AI Academy por nuestra cuenta</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-4">
-            <Sparkles className="w-8 h-8 text-accent mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-foreground">5 Amigos</h3>
-            <p className="text-sm text-foreground/70">Masterclass Exclusiva</p>
-          </div>
-          <div className="bg-card/10 backdrop-blur-sm border border-accent/20 rounded-lg p-4">
-            <Crown className="w-8 h-8 text-accent mx-auto mb-2" />
-            <h3 className="text-lg font-semibold text-foreground">10 Amigos</h3>
-            <p className="text-sm text-foreground/70">1 Mes Gratis</p>
-          </div>
-        </div>
+        </TooltipProvider>
 
         {/* Email Form */}
         <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-4">
