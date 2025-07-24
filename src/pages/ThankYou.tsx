@@ -236,11 +236,11 @@ const ThankYou = () => {
             <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/40 rounded-xl p-4 sm:p-6 shadow-xl">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
                 <Mail className="w-4 sm:w-5 h-4 sm:h-5 text-purple-300 flex-shrink-0" />
-                <h3 className="text-sm sm:text-lg font-semibold text-white">📧 Tu enlace de acceso</h3>
+                <h3 className="text-sm sm:text-lg font-semibold text-white"> Tu enlace de acceso</h3>
               </div>
               <div className="space-y-2">
                 <p className="text-purple-100 text-xs sm:text-sm">
-                  También hemos enviado tu enlace de dashboard personalizado por correo electrónico con todas las instrucciones.
+                  También hemos enviado tu enlace del dashboard de referidos por correo electrónico con todas las instrucciones.
                 </p>
                 <p className="text-purple-200 text-xs">
                   💡 Si no encuentras el correo, revisa tu carpeta de spam o promociones.
