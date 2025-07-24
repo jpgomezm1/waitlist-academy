@@ -11,7 +11,7 @@ import * as THREE from 'three';
 const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [creatorCount, setCreatorCount] = useState(150);
+  const [creatorCount, setCreatorCount] = useState(73);
   const [isCounterVisible, setIsCounterVisible] = useState(false);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [clickCount, setClickCount] = useState(0);
