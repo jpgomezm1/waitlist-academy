@@ -1,10 +1,13 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { Resend } from "npm:resend@2.0.0";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+const resend = new Resend(Deno.env.get('RESEND_API_KEY'));
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -35,10 +38,10 @@ serve(async (req) => {
     }
 
     if (existingUser) {
-      // User already exists, return their existing code
+      // User already exists, return success without sending another email
       console.log('User already exists:', existingUser.referral_code);
       return new Response(JSON.stringify({ 
-        referral_code: existingUser.referral_code,
+        success: true,
         isNew: false 
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -105,8 +108,96 @@ serve(async (req) => {
 
     console.log('New user created:', newUser.referral_code);
 
+    // Send welcome email for new users
+    try {
+      const dashboardUrl = `https://17cea61d-d3dc-45e7-a19d-7712f98c1277.lovableproject.com/referrals?code=${newUser.referral_code}`;
+      const referralUrl = `https://17cea61d-d3dc-45e7-a19d-7712f98c1277.lovableproject.com/?ref=${newUser.referral_code}`;
+
+      const emailHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>¡Bienvenido a AI Academy!</title>
+        </head>
+        <body style="margin: 0; padding: 0; background-color: #1A103C; font-family: 'Inter', 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #1A103C; padding: 40px 20px;">
+            
+            <!-- Header -->
+            <div style="text-align: center; margin-bottom: 40px;">
+              <h1 style="color: #FFFFFF; font-size: 28px; font-weight: bold; margin: 0; text-shadow: 0 2px 10px rgba(147, 51, 234, 0.3);">
+                ¡Bienvenido al Círculo Interno! 👑
+              </h1>
+            </div>
+
+            <!-- Main Content -->
+            <div style="background: rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 16px; padding: 32px; margin-bottom: 32px;">
+              
+              <p style="color: #FFFFFF; font-size: 18px; line-height: 1.6; margin: 0 0 24px 0;">
+                ¡Felicidades! Ya formas parte de la comunidad más exclusiva de creadores con IA.
+              </p>
+
+              <p style="color: #E5E7EB; font-size: 16px; line-height: 1.5; margin: 0 0 32px 0;">
+                Tu dashboard personal está listo. Desde ahí podrás invitar amigos, desbloquear recompensas increíbles y acceder a contenido exclusivo.
+              </p>
+
+              <!-- CTA Button -->
+              <div style="text-align: center; margin: 32px 0;">
+                <a href="${dashboardUrl}" style="display: inline-block; background-color: #10B981; color: #FFFFFF; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px; text-align: center; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); transition: all 0.3s ease;">
+                  🚀 Acceder a Mi Dashboard
+                </a>
+              </div>
+
+              <div style="background: rgba(93, 63, 211, 0.2); border-radius: 12px; padding: 20px; margin: 24px 0;">
+                <p style="color: #FFFFFF; font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">
+                  Tu Enlace de Referidos:
+                </p>
+                <p style="color: #5D3FD3; font-size: 14px; word-break: break-all; margin: 0; background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 8px; font-family: monospace;">
+                  ${referralUrl}
+                </p>
+              </div>
+
+            </div>
+
+            <!-- Contact Info -->
+            <div style="text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.3); padding-top: 24px;">
+              <p style="color: #9CA3AF; font-size: 14px; margin: 0 0 8px 0;">
+                ¿Necesitas ayuda? Contáctanos por WhatsApp
+              </p>
+              <a href="https://wa.me/573183351733" style="color: #10B981; text-decoration: none; font-weight: 600;">
+                +57 318 335 1733
+              </a>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 32px;">
+              <p style="color: #6B7280; font-size: 12px; margin: 0;">
+                Este correo fue enviado porque te registraste en AI Academy.<br>
+                Nos enfocamos en contenido de valor, sin spam.
+              </p>
+            </div>
+
+          </div>
+        </body>
+        </html>
+      `;
+
+      await resend.emails.send({
+        from: 'AI Academy <hola@updates.stayirrelevant.com>',
+        to: [email],
+        subject: '¡Bienvenido al Círculo Interno de AI Academy! 👑',
+        html: emailHtml,
+      });
+
+      console.log('Welcome email sent successfully to:', email);
+    } catch (emailError) {
+      console.error('Error sending welcome email:', emailError);
+      // Don't fail the whole operation if email fails
+    }
+
     return new Response(JSON.stringify({ 
-      referral_code: newUser.referral_code,
+      success: true,
       isNew: true 
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

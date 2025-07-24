@@ -145,11 +145,11 @@ const LandingPage = () => {
       if (error) throw error;
 
       localStorage.removeItem('referrer_code');
-      navigate(`/referrals?code=${data.referral_code}`);
+      navigate('/thank-you');
 
       toast({
         title: data.isNew ? "¡Bienvenido al Círculo Interno!" : "¡Te damos la bienvenida de vuelta!",
-        description: data.isNew ? "Tu enlace mágico está listo" : "Accede a tu dashboard personal",
+        description: data.isNew ? "Revisa tu email para acceder" : "Revisa tu email para el enlace",
       });
 
     } catch (error) {
