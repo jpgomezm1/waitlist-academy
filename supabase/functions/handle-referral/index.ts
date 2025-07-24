@@ -150,13 +150,6 @@ serve(async (req) => {
               </h1>
             </div>
 
-            <!-- Success Icon -->
-            <div style="text-align: center; margin-bottom: 32px;">
-              <div style="display: inline-block; width: 80px; height: 80px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);">
-                <span style="font-size: 36px;">✓</span>
-              </div>
-            </div>
-
             <!-- Welcome Message -->
             <div style="background: rgba(147, 51, 234, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
               
@@ -289,7 +282,7 @@ serve(async (req) => {
               <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">
                 ¿Tienes preguntas? Estamos aquí para ayudarte
               </p>
-              <a href="https://wa.me/573183351733" style="color: #10b981; text-decoration: none; font-weight: 600; font-size: 14px;">
+              <a href="https://wa.link/879mga" style="color: #10b981; text-decoration: none; font-weight: 600; font-size: 14px;">
                 📱 Soporte WhatsApp: +57 318 335 1733
               </a>
             </div>
