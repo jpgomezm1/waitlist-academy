@@ -122,9 +122,9 @@ serve(async (req) => {
           // 2. Determine the next reward
           const rewards = [
             { threshold: 1, name: "20 Prompts Esenciales PDF" },
-            { threshold: 3, name: "Stack de Herramientas Exclusivo" },
-            { threshold: 5, name: "30% de Descuento" },
-            { threshold: 12, name: "1 Año GRATIS Completo" }
+            { threshold: 4, name: "1 Sesión grabada con caso de uso real" },
+            { threshold: 7, name: "50% Descuento Primer Mes" },
+            { threshold: 12, name: "3 meses GRATIS" }
           ];
 
           let nextReward = null;
@@ -141,107 +141,148 @@ serve(async (req) => {
             const dashboardUrl = `https://17cea61d-d3dc-45e7-a19d-7712f98c1277.lovableproject.com/referrals?code=${referrer_code}`;
 
             const notificationEmailHtml = `
-              <!DOCTYPE html>
-              <html>
-              <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>¡Nuevo Referido! - AI Academy</title>
-                <style>
-                  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-                </style>
-              </head>
-              <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f0518 100%); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #ffffff; min-height: 100vh;">
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>¡Nuevo Referido! - AI Academy</title>
+              <style>
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
                 
-                <!-- Main Container -->
-                <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+                /* Reset styles */
+                * {
+                  box-sizing: border-box;
+                }
+                
+                /* Mobile-first responsive styles */
+                @media only screen and (max-width: 600px) {
+                  .main-container {
+                    padding: 20px 10px !important;
+                  }
                   
-                  <!-- Logo Section -->
-                  <div style="text-align: center; margin-bottom: 32px;">
-                    <img src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" alt="irrelevant logo" style="height: 40px; width: auto; filter: drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3));">
+                  .content-section {
+                    padding: 20px !important;
+                    margin-bottom: 20px !important;
+                  }
+                  
+                  .header-title {
+                    font-size: 24px !important;
+                    line-height: 1.3 !important;
+                  }
+                  
+                  .progress-text {
+                    font-size: 18px !important;
+                  }
+                  
+                  .goal-title {
+                    font-size: 20px !important;
+                  }
+                  
+                  .reward-text {
+                    font-size: 16px !important;
+                  }
+                  
+                  .cta-button {
+                    padding: 14px 24px !important;
+                    font-size: 14px !important;
+                    width: 100% !important;
+                    text-align: center !important;
+                  }
+                }
+              </style>
+            </head>
+            <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f0518 100%); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #ffffff; min-height: 100vh;">
+              
+              <!-- Main Container -->
+              <div class="main-container" style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+                
+                <!-- Logo Section -->
+                <div style="text-align: center; margin-bottom: 32px;">
+                  <img src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" alt="irrelevant logo" style="height: 40px; width: auto; filter: drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3)); max-width: 100%;">
+                </div>
+                
+                <!-- Header -->
+                <div style="text-align: center; margin-bottom: 40px;">
+                  <!-- Celebration Badge -->
+                  <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px; margin-bottom: 24px;">
+                    <span style="color: #ffffff; font-size: 14px; font-weight: 500; letter-spacing: 0.5px;">🎉 ¡NUEVO REFERIDO!</span>
                   </div>
                   
-                  <!-- Header -->
-                  <div style="text-align: center; margin-bottom: 40px;">
-                    <!-- Celebration Badge -->
-                    <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px; margin-bottom: 24px;">
-                      <span style="color: #ffffff; font-size: 14px; font-weight: 500; letter-spacing: 0.5px;">🎉 ¡NUEVO REFERIDO!</span>
+                  <h1 class="header-title" style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);">
+                    ¡Excelente! Ya tienes ${referrer.referral_count} referido${referrer.referral_count === 1 ? '' : 's'}
+                  </h1>
+                </div>
+            
+                <!-- Progress Message -->
+                <div class="content-section" style="background: rgba(147, 51, 234, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                  
+                  <p class="progress-text" style="color: #ffffff; font-size: 20px; line-height: 1.6; margin: 0 0 24px 0; text-align: center; font-weight: 600;">
+                    ¡Alguien más se unió usando tu enlace!
+                  </p>
+            
+                  <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0; text-align: center;">
+                    Vas por un excelente camino. Sigue compartiendo tu enlace para desbloquear recompensas increíbles.
+                  </p>
+            
+                </div>
+            
+                <!-- Next Goal Section -->
+                <div class="content-section" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                  
+                  <!-- Goal Badge -->
+                  <div style="text-align: center; margin-bottom: 24px;">
+                    <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px;">
+                      <span style="color: #ffffff; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">🎯 PRÓXIMA META</span>
                     </div>
-                    
-                    <h1 style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);">
-                      ¡Excelente! Ya tienes ${referrer.referral_count} referido${referrer.referral_count === 1 ? '' : 's'}
-                    </h1>
                   </div>
-
-                  <!-- Progress Message -->
-                  <div style="background: rgba(147, 51, 234, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-                    
-                    <p style="color: #ffffff; font-size: 20px; line-height: 1.6; margin: 0 0 24px 0; text-align: center; font-weight: 600;">
-                      ¡Alguien más se unió usando tu enlace!
+            
+                  <h2 class="goal-title" style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; text-align: center;">
+                    Te faltan ${referralsNeeded} referido${referralsNeeded === 1 ? '' : 's'} más
+                  </h2>
+            
+                  <p style="color: #e5e7eb; font-size: 18px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
+                    Para conseguir tu siguiente premio:
+                  </p>
+            
+                  <!-- Reward Preview -->
+                  <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 24px; margin: 24px 0; text-align: center;">
+                    <div style="font-size: 32px; margin-bottom: 12px;">🏆</div>
+                    <p class="reward-text" style="color: #10b981; font-size: 20px; font-weight: 700; margin: 0;">
+                      ${nextReward.name}
                     </p>
-
-                    <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0; text-align: center;">
-                      Vas por un excelente camino. Sigue compartiendo tu enlace para desbloquear recompensas increíbles.
-                    </p>
-
                   </div>
-
-                  <!-- Next Goal Section -->
-                  <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-                    
-                    <!-- Goal Badge -->
-                    <div style="text-align: center; margin-bottom: 24px;">
-                      <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px;">
-                        <span style="color: #ffffff; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">🎯 PRÓXIMA META</span>
-                      </div>
-                    </div>
-
-                    <h2 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; text-align: center;">
-                      Te faltan ${referralsNeeded} referido${referralsNeeded === 1 ? '' : 's'} más
-                    </h2>
-
-                    <p style="color: #e5e7eb; font-size: 18px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-                      Para conseguir tu siguiente premio:
-                    </p>
-
-                    <!-- Reward Preview -->
-                    <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 24px; margin: 24px 0; text-align: center;">
-                      <div style="font-size: 32px; margin-bottom: 12px;">🏆</div>
-                      <p style="color: #10b981; font-size: 20px; font-weight: 700; margin: 0;">
-                        ${nextReward.name}
-                      </p>
-                    </div>
-
-                    <!-- Dashboard CTA -->
-                    <div style="text-align: center; margin: 32px 0;">
-                      <a href="${dashboardUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; border: none;">
-                        📊 Ver mi Progreso
-                      </a>
-                    </div>
-
-                  </div>
-
-                  <!-- Support Section -->
-                  <div style="text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.3); padding-top: 24px; margin-bottom: 24px;">
-                    <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">
-                      ¿Tienes preguntas? Estamos aquí para ayudarte
-                    </p>
-                    <a href="https://wa.link/879mga" style="color: #10b981; text-decoration: none; font-weight: 600; font-size: 14px;">
-                      📱 Soporte WhatsApp: +57 318 335 1733
+            
+                  <!-- Dashboard CTA -->
+                  <div style="text-align: center; margin: 32px 0;">
+                    <a href="${dashboardUrl}" class="cta-button" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; border: none;">
+                      📊 Ver mi Progreso
                     </a>
                   </div>
-
-                  <!-- Footer -->
-                  <div style="text-align: center;">
-                    <p style="color: #6b7280; font-size: 12px; margin: 0; line-height: 1.5;">
-                      Sigues siendo parte de la waitlist de AI Academy. Te avisaremos cuando esté listo.<br>
-                      Solo contenido de valor, sin spam.
-                    </p>
-                  </div>
-
+            
                 </div>
-              </body>
-              </html>
+            
+                <!-- Support Section -->
+                <div style="text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.3); padding-top: 24px; margin-bottom: 24px;">
+                  <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">
+                    ¿Tienes preguntas? Estamos aquí para ayudarte
+                  </p>
+                  <a href="https://wa.link/879mga" style="color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px;">
+                    📱 Soporte WhatsApp: +57 318 335 1733
+                  </a>
+                </div>
+            
+                <!-- Footer -->
+                <div style="text-align: center;">
+                  <p style="color: #6b7280; font-size: 12px; margin: 0; line-height: 1.5;">
+                    Sigues siendo parte de la waitlist de AI Academy. Te avisaremos cuando esté listo.<br>
+                    Solo contenido de valor, sin spam.
+                  </p>
+                </div>
+            
+              </div>
+            </body>
+            </html>
             `;
 
             console.log('Sending referral notification email to:', referrer.email);
@@ -278,186 +319,251 @@ serve(async (req) => {
       console.log('Using domain:', Deno.env.get('DOMAIN'));
 
       const emailHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>¡Bienvenido a la Waitlist de AI Academy!</title>
-          <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-          </style>
-        </head>
-        <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f0518 100%); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #ffffff; min-height: 100vh;">
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>¡Bienvenido a la Waitlist de AI Academy!</title>
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
           
-          <!-- Main Container -->
-          <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+          /* Reset styles */
+          * {
+            box-sizing: border-box;
+          }
+          
+          /* Mobile-first responsive styles */
+          @media only screen and (max-width: 600px) {
+            .main-container {
+              padding: 20px 10px !important;
+            }
             
-            <!-- Logo Section -->
-            <div style="text-align: center; margin-bottom: 32px;">
-              <img src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" alt="irrelevant logo" style="height: 40px; width: auto; filter: drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3));">
-            </div>
+            .content-section {
+              padding: 20px !important;
+              margin-bottom: 20px !important;
+            }
             
-            <!-- Header -->
-            <div style="text-align: center; margin-bottom: 40px;">
-              <!-- AI Academy Badge -->
-              <div style="display: inline-flex; align-items: center; background: rgba(147, 51, 234, 0.2); border: 1px solid rgba(147, 51, 234, 0.4); border-radius: 50px; padding: 12px 20px; margin-bottom: 24px;">
-                <span style="color: #a855f7; font-size: 14px; font-weight: 500; letter-spacing: 0.5px;">👑 AI Academy Waitlist</span>
-              </div>
-              
-              <h1 style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);">
-                ¡Bienvenido al Club!
-              </h1>
-            </div>
-
-            <!-- Welcome Message -->
-            <div style="background: rgba(147, 51, 234, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-              
-              <p style="color: #ffffff; font-size: 20px; line-height: 1.6; margin: 0 0 24px 0; text-align: center; font-weight: 600;">
-                ¡Felicidades! Ya formas parte de la waitlist exclusiva de AI Academy.
-              </p>
-
-              <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-                Serás de los primeros en acceder cuando abramos las puertas, y tendrás beneficios que otros no tendrán. 
-                Te mantendremos informado sobre el progreso del curso y te avisaremos tan pronto esté disponible.
-              </p>
-
-              <p style="color: #a855f7; font-size: 16px; line-height: 1.5; margin: 0; text-align: center; font-weight: 500;">
-                Mientras tanto, mantente atento a tu email para actualizaciones exclusivas y contenido anticipado. 📧
-              </p>
-
-            </div>
-
-            <!-- Surprise Section -->
-            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
-              
-              <!-- Surprise Badge -->
-              <div style="text-align: center; margin-bottom: 24px;">
-                <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px;">
-                  <span style="color: #ffffff; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">🎁 PRIMERA SORPRESA</span>
-                </div>
-              </div>
-
-              <h2 style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; text-align: center;">
-                Sistema de Referidos Exclusivo
-              </h2>
-
-              <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
-                Como <strong style="color: #10b981;">Early Adopter</strong>, tienes acceso anticipado a nuestro sistema de recompensas. 
-                Invita amigos y desbloquea beneficios increíbles antes que nadie.
-              </p>
-
-              <!-- How it Works -->
-              <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 24px; margin: 24px 0;">
-                <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 16px 0; text-align: center;">
-                  ¿Cómo funciona?
-                </h3>
-                
-                <div style="color: #e5e7eb; font-size: 14px; line-height: 1.6;">
-                  <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                    <span style="color: #10b981; font-weight: 600; margin-right: 8px;">1.</span>
-                    Comparte tu enlace único con amigos interesados en IA
-                  </div>
-                  <div style="display: flex; align-items: center; margin-bottom: 12px;">
-                    <span style="color: #10b981; font-weight: 600; margin-right: 8px;">2.</span>
-                    Cada amigo que se una usando tu enlace cuenta como referido
-                  </div>
-                  <div style="display: flex; align-items: center;">
-                    <span style="color: #10b981; font-weight: 600; margin-right: 8px;">3.</span>
-                    Desbloquea recompensas automáticamente según tus referidos
-                  </div>
-                </div>
-              </div>
-
-              <!-- Rewards Preview -->
-              <div style="background: rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 24px; margin: 24px 0;">
-                <h3 style="color: #ffffff; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; text-align: center;">
-                  🏆 Recompensas que puedes desbloquear:
-                </h3>
-                
-                <div style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
-                  <div style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">📚</div>
-                    <div style="color: #10b981; font-size: 14px; font-weight: 600;">1 Referido</div>
-                    <div style="color: #e5e7eb; font-size: 12px;">20 Prompts Esenciales PDF</div>
-                  </div>
-                  <div style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">🛠️</div>
-                    <div style="color: #10b981; font-size: 14px; font-weight: 600;">3 Referidos</div>
-                    <div style="color: #e5e7eb; font-size: 12px;">Stack de Herramientas Exclusivo</div>
-                  </div>
-                  <div style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
-                    <div style="color: #10b981; font-size: 14px; font-weight: 600;">5 Referidos</div>
-                    <div style="color: #e5e7eb; font-size: 12px;">30% de Descuento</div>
-                  </div>
-                  <div style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">👑</div>
-                    <div style="color: #10b981; font-size: 14px; font-weight: 600;">12 Referidos</div>
-                    <div style="color: #e5e7eb; font-size: 12px;">1 Año GRATIS Completo</div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Referral Link -->
-              <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 20px; margin: 24px 0;">
-                <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">
-                  🔗 Tu enlace mágico de referidos:
-                </p>
-                <div style="background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 8px; word-break: break-all; text-align: center;">
-                  <p style="color: #a855f7; font-size: 14px; margin: 0; font-family: 'Courier New', monospace;">
-                    ${referralUrl}
-                  </p>
-                </div>
-                <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0; text-align: center;">
-                  Cópialo y compártelo en redes sociales, WhatsApp o donde quieras
-                </p>
-              </div>
-
-              <!-- Dashboard CTA -->
-              <div style="text-align: center; margin: 32px 0;">
-                <a href="${dashboardUrl}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; border: none;">
-                  🚀 Ver Mi Dashboard de Referidos
-                </a>
-              </div>
-
-            </div>
-
-            <!-- WhatsApp Community -->
-            <div style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-radius: 16px; padding: 32px; text-align: center; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(37, 211, 102, 0.2);">
-              <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
-              <h3 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">
-                Únete a la Comunidad Exclusiva
-              </h3>
-              <p style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin: 0 0 20px 0; line-height: 1.5;">
-                Conecta con otros Early Adopters, comparte ideas y accede a contenido exclusivo que no encontrarás en ningún otro lugar.
-              </p>
-              <a href="https://chat.whatsapp.com/JMSMme18JN9B6zHdRC6ZGg" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px; border: 2px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);">
-                📱 Entrar al Grupo de WhatsApp
-              </a>
-            </div>
-
-            <!-- Support Section -->
-            <div style="text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.3); padding-top: 24px; margin-bottom: 24px;">
-              <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">
-                ¿Tienes preguntas? Estamos aquí para ayudarte
-              </p>
-              <a href="https://wa.link/879mga" style="color: #10b981; text-decoration: none; font-weight: 600; font-size: 14px;">
-                📱 Soporte WhatsApp: +57 318 335 1733
-              </a>
-            </div>
-
-            <!-- Footer -->
-            <div style="text-align: center;">
-              <p style="color: #6b7280; font-size: 12px; margin: 0; line-height: 1.5;">
-                Te registraste en la waitlist de AI Academy. Te enviaremos actualizaciones sobre el curso.<br>
-                Solo contenido de valor, sin spam. Puedes desuscribirte cuando quieras.
-              </p>
-            </div>
-
+            .header-title {
+              font-size: 24px !important;
+              line-height: 1.3 !important;
+            }
+            
+            .welcome-text {
+              font-size: 18px !important;
+            }
+            
+            .section-title {
+              font-size: 20px !important;
+            }
+            
+            .rewards-container {
+              flex-direction: column !important;
+              gap: 8px !important;
+            }
+            
+            .reward-item {
+              min-width: auto !important;
+              flex: none !important;
+              padding: 8px !important;
+            }
+            
+            .referral-link-text {
+              font-size: 12px !important;
+              word-break: break-all !important;
+            }
+            
+            .cta-button {
+              padding: 14px 20px !important;
+              font-size: 14px !important;
+              width: 100% !important;
+              text-align: center !important;
+            }
+            
+            .whatsapp-section {
+              padding: 20px !important;
+            }
+            
+            .whatsapp-title {
+              font-size: 18px !important;
+            }
+            
+            .whatsapp-text {
+              font-size: 14px !important;
+            }
+          }
+        </style>
+      </head>
+      <body style="margin: 0; padding: 0; background: linear-gradient(135deg, #1a0b2e 0%, #2d1b4e 50%, #0f0518 100%); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: #ffffff; min-height: 100vh;">
+        
+        <!-- Main Container -->
+        <div class="main-container" style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
+          
+          <!-- Logo Section -->
+          <div style="text-align: center; margin-bottom: 32px;">
+            <img src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" alt="irrelevant logo" style="height: 40px; width: auto; filter: drop-shadow(0 4px 8px rgba(147, 51, 234, 0.3)); max-width: 100%;">
           </div>
-        </body>
-        </html>
+          
+          <!-- Header -->
+          <div style="text-align: center; margin-bottom: 40px;">
+            <!-- AI Academy Badge -->
+            <div style="display: inline-flex; align-items: center; background: rgba(147, 51, 234, 0.2); border: 1px solid rgba(147, 51, 234, 0.4); border-radius: 50px; padding: 12px 20px; margin-bottom: 24px;">
+              <span style="color: #a855f7; font-size: 14px; font-weight: 500; letter-spacing: 0.5px;">👑 AI Academy Waitlist</span>
+            </div>
+            
+            <h1 class="header-title" style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);">
+              ¡Bienvenido al Club!
+            </h1>
+          </div>
+      
+          <!-- Welcome Message -->
+          <div class="content-section" style="background: rgba(147, 51, 234, 0.1); backdrop-filter: blur(20px); border: 1px solid rgba(147, 51, 234, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+            
+            <p class="welcome-text" style="color: #ffffff; font-size: 20px; line-height: 1.6; margin: 0 0 24px 0; text-align: center; font-weight: 600;">
+              ¡Felicidades! Ya formas parte de la waitlist exclusiva de AI Academy.
+            </p>
+      
+            <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
+              Serás de los primeros en acceder cuando abramos las puertas, y tendrás beneficios que otros no tendrán. 
+              Te mantendremos informado sobre el progreso del curso y te avisaremos tan pronto esté disponible.
+            </p>
+      
+            <p style="color: #a855f7; font-size: 16px; line-height: 1.5; margin: 0; text-align: center; font-weight: 500;">
+              Mientras tanto, mantente atento a tu email para actualizaciones exclusivas y contenido anticipado. 📧
+            </p>
+      
+          </div>
+      
+          <!-- Surprise Section -->
+          <div class="content-section" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 20px; padding: 40px; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+            
+            <!-- Surprise Badge -->
+            <div style="text-align: center; margin-bottom: 24px;">
+              <div style="display: inline-flex; align-items: center; background: linear-gradient(135deg, #10b981 0%, #059669 100%); border-radius: 50px; padding: 12px 20px;">
+                <span style="color: #ffffff; font-size: 14px; font-weight: 600; letter-spacing: 0.5px;">🎁 PRIMERA SORPRESA</span>
+              </div>
+            </div>
+      
+            <h2 class="section-title" style="color: #ffffff; font-size: 24px; font-weight: 700; margin: 0 0 20px 0; text-align: center;">
+              Sistema de Referidos Exclusivo
+            </h2>
+      
+            <p style="color: #e5e7eb; font-size: 16px; line-height: 1.6; margin: 0 0 24px 0; text-align: center;">
+              Como <strong style="color: #10b981;">Early Adopter</strong>, tienes acceso anticipado a nuestro sistema de recompensas. 
+              Invita amigos y desbloquea beneficios increíbles antes que nadie.
+            </p>
+      
+            <!-- How it Works -->
+            <div style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 24px; margin: 24px 0;">
+              <h3 style="color: #ffffff; font-size: 18px; font-weight: 600; margin: 0 0 16px 0; text-align: center;">
+                ¿Cómo funciona?
+              </h3>
+              
+              <div style="color: #e5e7eb; font-size: 14px; line-height: 1.6;">
+                <div style="display: flex; align-items: flex-start; margin-bottom: 12px;">
+                  <span style="color: #10b981; font-weight: 600; margin-right: 8px; min-width: 20px;">1.</span>
+                  <span>Comparte tu enlace único con amigos interesados en IA</span>
+                </div>
+                <div style="display: flex; align-items: flex-start; margin-bottom: 12px;">
+                  <span style="color: #10b981; font-weight: 600; margin-right: 8px; min-width: 20px;">2.</span>
+                  <span>Cada amigo que se una usando tu enlace cuenta como referido</span>
+                </div>
+                <div style="display: flex; align-items: flex-start;">
+                  <span style="color: #10b981; font-weight: 600; margin-right: 8px; min-width: 20px;">3.</span>
+                  <span>Desbloquea recompensas automáticamente según tus referidos</span>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Rewards Preview -->
+            <div style="background: rgba(139, 92, 246, 0.1); border-radius: 16px; padding: 24px; margin: 24px 0;">
+              <h3 style="color: #ffffff; font-size: 16px; font-weight: 600; margin: 0 0 16px 0; text-align: center;">
+                🏆 Recompensas que puedes desbloquear:
+              </h3>
+              
+              <div class="rewards-container" style="display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div class="reward-item" style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
+                  <div style="font-size: 24px; margin-bottom: 8px;">📚</div>
+                  <div style="color: #10b981; font-size: 14px; font-weight: 600;">1 Referido</div>
+                  <div style="color: #e5e7eb; font-size: 12px;">20 Prompts Esenciales PDF</div>
+                </div>
+                <div class="reward-item" style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
+                  <div style="font-size: 24px; margin-bottom: 8px;">🛠️</div>
+                  <div style="color: #10b981; font-size: 14px; font-weight: 600;">4 Referidos</div>
+                  <div style="color: #e5e7eb; font-size: 12px;">1 Sesión grabada</div>
+                </div>
+                <div class="reward-item" style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
+                  <div style="font-size: 24px; margin-bottom: 8px;">⚡</div>
+                  <div style="color: #10b981; font-size: 14px; font-weight: 600;">7 Referidos</div>
+                  <div style="color: #e5e7eb; font-size: 12px;">50% Descuento Primer Mes</div>
+                </div>
+                <div class="reward-item" style="flex: 1; min-width: 120px; text-align: center; padding: 12px;">
+                  <div style="font-size: 24px; margin-bottom: 8px;">👑</div>
+                  <div style="color: #10b981; font-size: 14px; font-weight: 600;">12 Referidos</div>
+                  <div style="color: #e5e7eb; font-size: 12px;">3 meses GRATIS</div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Referral Link -->
+            <div style="background: rgba(139, 92, 246, 0.05); border: 1px solid rgba(139, 92, 246, 0.2); border-radius: 12px; padding: 20px; margin: 24px 0;">
+              <p style="color: #ffffff; font-size: 14px; font-weight: 600; margin: 0 0 12px 0; text-align: center;">
+                🔗 Tu enlace mágico de referidos:
+              </p>
+              <div style="background: rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 8px; word-break: break-all; text-align: center;">
+                <p class="referral-link-text" style="color: #ffffff; font-size: 14px; margin: 0; font-family: 'Courier New', monospace;">
+                  ${referralUrl}
+                </p>
+              </div>
+              <p style="color: #9ca3af; font-size: 12px; margin: 12px 0 0 0; text-align: center;">
+                Cópialo y compártelo en redes sociales, WhatsApp o donde quieras
+              </p>
+            </div>
+      
+            <!-- Dashboard CTA -->
+            <div style="text-align: center; margin: 32px 0;">
+              <a href="${dashboardUrl}" class="cta-button" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 18px 36px; border-radius: 12px; font-weight: 600; font-size: 16px; box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); transition: all 0.3s ease; border: none;">
+                🚀 Ver Mi Dashboard de Referidos
+              </a>
+            </div>
+      
+          </div>
+      
+          <!-- WhatsApp Community -->
+          <div class="whatsapp-section" style="background: linear-gradient(135deg, #25d366 0%, #128c7e 100%); border-radius: 16px; padding: 32px; text-align: center; margin-bottom: 32px; box-shadow: 0 8px 32px rgba(37, 211, 102, 0.2);">
+            <div style="font-size: 48px; margin-bottom: 16px;">💬</div>
+            <h3 class="whatsapp-title" style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">
+              Únete a la Comunidad Exclusiva
+            </h3>
+            <p class="whatsapp-text" style="color: rgba(255, 255, 255, 0.9); font-size: 16px; margin: 0 0 20px 0; line-height: 1.5;">
+              Conecta con otros Early Adopters, comparte ideas y accede a contenido exclusivo que no encontrarás en ningún otro lugar.
+            </p>
+            <a href="https://chat.whatsapp.com/JMSMme18JN9B6zHdRC6ZGg" class="cta-button" style="display: inline-block; background: rgba(255, 255, 255, 0.2); color: #ffffff; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 16px; border: 2px solid rgba(255, 255, 255, 0.3); backdrop-filter: blur(10px);">
+              📱 Entrar al Grupo de WhatsApp
+            </a>
+          </div>
+      
+          <!-- Support Section -->
+          <div style="text-align: center; border-top: 1px solid rgba(147, 51, 234, 0.3); padding-top: 24px; margin-bottom: 24px;">
+            <p style="color: #9ca3af; font-size: 14px; margin: 0 0 8px 0;">
+              ¿Tienes preguntas? Estamos aquí para ayudarte
+            </p>
+            <a href="https://wa.link/879mga" style="color: #ffffff; text-decoration: none; font-weight: 600; font-size: 14px;">
+              📱 Soporte WhatsApp: +57 318 335 1733
+            </a>
+          </div>
+      
+          <!-- Footer -->
+          <div style="text-align: center;">
+            <p style="color: #6b7280; font-size: 12px; margin: 0; line-height: 1.5;">
+              Te registraste en la waitlist de AI Academy. Te enviaremos actualizaciones sobre el curso.<br>
+              Solo contenido de valor, sin spam. Puedes desuscribirte cuando quieras.
+            </p>
+          </div>
+      
+        </div>
+      </body>
+      </html>
       `;
 
       // Try sending with verified domain first, fallback to sandbox if not verified
