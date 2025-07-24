@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Sparkles, Crown, ArrowRight, Brain, Code, Zap, Users } from 'lucide-react';
+import { Sparkles, Crown, ArrowRight, Brain, Code, Zap, Users, X, Clock, Cpu } from 'lucide-react';
 import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
@@ -13,12 +13,15 @@ const LandingPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [creatorCount, setCreatorCount] = useState(150);
   const [isCounterVisible, setIsCounterVisible] = useState(false);
+  const [showEasterEgg, setShowEasterEgg] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const animationRef = useRef(null);
   const previousCount = useRef(150);
+  const clickTimeoutRef = useRef(null);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -45,6 +48,32 @@ const LandingPage = () => {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Easter egg click handler
+  const handleLogoClick = () => {
+    setClickCount(prev => prev + 1);
+    
+    // Clear existing timeout
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+    
+    // Check if 5 clicks within 3 seconds
+    if (clickCount >= 4) { // 4 because we just incremented to 5
+      setShowEasterEgg(true);
+      setClickCount(0);
+      
+      // Track easter egg discovery
+      Mixpanel.track('Easter Egg Discovered', {
+        method: 'logo_clicks'
+      });
+    } else {
+      // Reset click count after 3 seconds
+      clickTimeoutRef.current = setTimeout(() => {
+        setClickCount(0);
+      }, 3000);
+    }
+  };
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -199,6 +228,84 @@ const LandingPage = () => {
       {/* Three.js Canvas - Solo partículas */}
       <div ref={mountRef} className="absolute inset-0 z-0" />
       
+      {/* Easter Egg Modal */}
+      {showEasterEgg && (
+        <>
+          {/* Backdrop */}
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in relative overflow-hidden">
+              
+              {/* Animated background elements */}
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-4 -right-4 w-20 h-20 bg-purple-400/20 rounded-full blur-xl animate-pulse"></div>
+                <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-300/20 rounded-full blur-lg animate-pulse delay-1000"></div>
+              </div>
+              
+              {/* Close button */}
+              <button
+                onClick={() => setShowEasterEgg(false)}
+                className="absolute top-4 right-4 p-2 text-purple-300 hover:text-white transition-colors duration-200 hover:bg-purple-700/50 rounded-full"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="relative space-y-6 text-center">
+                {/* Icon */}
+                <div className="flex justify-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                    <Cpu className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                
+                {/* Title */}
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-white">
+                    🤖 Plot Twist!
+                  </h3>
+                  <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto"></div>
+                </div>
+                
+                {/* Content */}
+                <div className="space-y-4">
+                  <div className="bg-purple-800/40 rounded-xl p-4 border border-purple-400/30">
+                    <div className="flex items-center justify-center space-x-2 mb-3">
+                      <Clock className="w-5 h-5 text-purple-300" />
+                      <span className="text-purple-100 font-semibold">Tiempo de desarrollo</span>
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-1">
+                      &lt; 24 horas
+                    </div>
+                    <div className="text-purple-200 text-sm">
+                      Con pura IA generativa 🚀
+                    </div>
+                  </div>
+                  
+                  <p className="text-purple-100 leading-relaxed text-sm">
+                    Esta landing page completa fue creada usando IA generativa en menos de 24 horas. 
+                    <span className="text-purple-300 font-semibold"> Desde el concepto hasta el código final.</span>
+                  </p>
+                  
+                  <div className="flex items-center justify-center space-x-2 text-purple-300 text-xs">
+                    <Brain className="w-4 h-4" />
+                    <span>Hecho con Claude, Cursor y mucho café ☕</span>
+                  </div>
+                </div>
+                
+                {/* CTA */}
+                <div className="pt-2">
+                  <button
+                    onClick={() => setShowEasterEgg(false)}
+                    className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105"
+                  >
+                    ¡Increíble! 🤯
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      
       {/* Floating Icons - Iconos originales */}
       <div className="absolute inset-0 pointer-events-none opacity-40 z-5">
         <div className="absolute top-[15%] left-[10%] w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg rotate-12 shadow-lg animate-float">
@@ -280,7 +387,7 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Author Badge */}
+            {/* Author Badge - Modified with click handler */}
             <div className="flex items-center space-x-3">
               <div className="relative">
                 {/* Enhanced glow effect */}
@@ -302,7 +409,9 @@ const LandingPage = () => {
                   <img 
                     src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" 
                     alt="irrelevant logo" 
-                    className="h-5 w-auto drop-shadow-lg"
+                    className="h-5 w-auto drop-shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200"
+                    onClick={handleLogoClick}
+                    title="¿Tienes curiosidad? 🤔"
                   />
                 </div>
               </div>
@@ -374,6 +483,11 @@ const LandingPage = () => {
           100% { transform: translateY(0); opacity: 1; }
         }
         
+        @keyframes scale-in {
+          0% { transform: scale(0.9); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+        
         .animate-float {
           animation: float 8s ease-in-out infinite;
         }
@@ -389,6 +503,10 @@ const LandingPage = () => {
         
         .counter-animation {
           animation: countUp 0.5s ease-out;
+        }
+        
+        .animate-scale-in {
+          animation: scale-in 0.3s ease-out;
         }
       `}</style>
     </div>
