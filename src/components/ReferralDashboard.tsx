@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/card'; // Card is imported but not used
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client'; // Supabase is imported but not directly used in the provided code
 import { Copy, Users, Lock, CheckCircle, Crown, Sparkles, Gift, MessageCircle, FileText, Package, Percent, Calendar, Star } from 'lucide-react';
+import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
 interface UserData {
@@ -196,6 +197,15 @@ const ReferralDashboard = () => {
       }
 
       setUserData(data);
+      
+      // Identify user in Mixpanel
+      if (data && data.email) {
+        Mixpanel.identify(data.email);
+        Mixpanel.people.set({
+          $email: data.email,
+          referral_count: data.referral_count
+        });
+      }
     } catch (error) {
       console.error('Error fetching user data:', error);
       toast({
@@ -212,6 +222,12 @@ const ReferralDashboard = () => {
     try {
       await navigator.clipboard.writeText(referralLink);
       setCopySuccess(true);
+      
+      // Track referral link copy in Mixpanel
+      Mixpanel.track('Referral Link Copied', {
+        referralCode: referralCode
+      });
+      
       toast({
         title: "¡Copiado!",
         description: "Enlace copiado al portapapeles",

@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Sparkles, Crown, ArrowRight, Brain, Code, Zap } from 'lucide-react';
+import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
 const LandingPage = () => {
@@ -143,6 +144,14 @@ const LandingPage = () => {
       });
 
       if (error) throw error;
+
+      // Track successful signup in Mixpanel
+      const userEmail = email.trim();
+      Mixpanel.alias(userEmail);
+      Mixpanel.people.set({ $email: userEmail, signup_date: new Date().toISOString() });
+      Mixpanel.track('Waitlist Signup', {
+        isNewUser: data.isNew
+      });
 
       localStorage.removeItem('referrer_code');
       navigate('/thank-you');
