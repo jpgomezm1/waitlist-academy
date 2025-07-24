@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Sparkles, Crown, ArrowRight, Brain, Code, Zap, Users, X, Clock, Cpu } from 'lucide-react';
+import { Sparkles, Crown, ArrowRight, Brain, Code, Zap, Users, X, Clock, Cpu, Bot, Mail, Globe, MessageCircle, BarChart3, ShoppingCart } from 'lucide-react';
 import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
@@ -15,6 +15,7 @@ const LandingPage = () => {
   const [isCounterVisible, setIsCounterVisible] = useState(false);
   const [showEasterEgg, setShowEasterEgg] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [currentExample, setCurrentExample] = useState(0);
   const { toast } = useToast();
   const navigate = useNavigate();
   const mountRef = useRef(null);
@@ -22,6 +23,16 @@ const LandingPage = () => {
   const animationRef = useRef(null);
   const previousCount = useRef(150);
   const clickTimeoutRef = useRef(null);
+
+  // Ejemplos rotativos de herramientas
+  const examples = [
+    { icon: Bot, text: "Chatbot para tu negocio", time: "2 horas" },
+    { icon: Mail, text: "Automatiza email marketing", time: "1 hora" },
+    { icon: BarChart3, text: "Dashboard de datos", time: "3 horas" },
+    { icon: Globe, text: "App web personalizada", time: "4 horas" },
+    { icon: Zap, text: "Herramientas para ser 10X productivo", time: "1 día" },
+    { icon: Brain, text: "Fundamentos para dominar IA", time: "2 días" }
+  ];
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -44,31 +55,35 @@ const LandingPage = () => {
         previousCount.current = prev;
         return newCount;
       });
-    }, 7000); // Increase every 7 seconds
+    }, 7000);
 
-    return () => clearInterval(interval);
+    // Rotate examples every 3 seconds
+    const exampleInterval = setInterval(() => {
+      setCurrentExample(prev => (prev + 1) % examples.length);
+    }, 3000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(exampleInterval);
+    };
   }, []);
 
   // Easter egg click handler
   const handleLogoClick = () => {
     setClickCount(prev => prev + 1);
     
-    // Clear existing timeout
     if (clickTimeoutRef.current) {
       clearTimeout(clickTimeoutRef.current);
     }
     
-    // Check if 5 clicks within 3 seconds
-    if (clickCount >= 4) { // 4 because we just incremented to 5
+    if (clickCount >= 4) {
       setShowEasterEgg(true);
       setClickCount(0);
       
-      // Track easter egg discovery
       Mixpanel.track('Easter Egg Discovered', {
         method: 'logo_clicks'
       });
     } else {
-      // Reset click count after 3 seconds
       clickTimeoutRef.current = setTimeout(() => {
         setClickCount(0);
       }, 3000);
@@ -89,7 +104,7 @@ const LandingPage = () => {
     mountRef.current.appendChild(renderer.domElement);
     sceneRef.current = { scene, camera, renderer };
 
-    // Particle system only
+    // Particle system
     const particleCount = 150;
     const particles = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
@@ -195,7 +210,6 @@ const LandingPage = () => {
 
       if (error) throw error;
 
-      // Track successful signup in Mixpanel
       const userEmail = email.trim();
       Mixpanel.alias(userEmail);
       Mixpanel.people.set({ $email: userEmail, signup_date: new Date().toISOString() });
@@ -225,105 +239,80 @@ const LandingPage = () => {
 
   return (
     <div className="h-screen relative overflow-hidden bg-gradient-to-br from-[#1a0b2e] via-[#2d1b4e] to-[#0f0518]">
-      {/* Three.js Canvas - Solo partículas */}
+      {/* Three.js Canvas */}
       <div ref={mountRef} className="absolute inset-0 z-0" />
       
       {/* Easter Egg Modal */}
       {showEasterEgg && (
-        <>
-          {/* Backdrop */}
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in relative overflow-hidden">
-              
-              {/* Animated background elements */}
-              <div className="absolute inset-0 overflow-hidden">
-                <div className="absolute -top-4 -right-4 w-20 h-20 bg-purple-400/20 rounded-full blur-xl animate-pulse"></div>
-                <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-300/20 rounded-full blur-lg animate-pulse delay-1000"></div>
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in relative overflow-hidden">
+            <button
+              onClick={() => setShowEasterEgg(false)}
+              className="absolute top-4 right-4 p-2 text-purple-300 hover:text-white transition-colors duration-200 hover:bg-purple-700/50 rounded-full"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            
+            <div className="relative space-y-6 text-center">
+              <div className="flex justify-center">
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                  <Cpu className="w-8 h-8 text-white" />
+                </div>
               </div>
               
-              {/* Close button */}
-              <button
-                onClick={() => setShowEasterEgg(false)}
-                className="absolute top-4 right-4 p-2 text-purple-300 hover:text-white transition-colors duration-200 hover:bg-purple-700/50 rounded-full"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="space-y-2">
+                <h3 className="text-2xl font-bold text-white">🤖 Plot Twist!</h3>
+                <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto"></div>
+              </div>
               
-              <div className="relative space-y-6 text-center">
-                {/* Icon */}
-                <div className="flex justify-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-                    <Cpu className="w-8 h-8 text-white" />
+              <div className="space-y-4">
+                <div className="bg-purple-800/40 rounded-xl p-4 border border-purple-400/30">
+                  <div className="flex items-center justify-center space-x-2 mb-3">
+                    <Clock className="w-5 h-5 text-purple-300" />
+                    <span className="text-purple-100 font-semibold">Tiempo de desarrollo</span>
                   </div>
+                  <div className="text-3xl font-bold text-white mb-1">&lt; 24 horas</div>
+                  <div className="text-purple-200 text-sm">Con pura IA generativa 🚀</div>
                 </div>
                 
-                {/* Title */}
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-bold text-white">
-                    🤖 Plot Twist!
-                  </h3>
-                  <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto"></div>
-                </div>
+                <p className="text-purple-100 leading-relaxed text-sm">
+                  Esta landing page completa fue creada usando IA generativa en menos de 24 horas. 
+                  <span className="text-purple-300 font-semibold"> Desde el concepto hasta el código final.</span>
+                </p>
                 
-                {/* Content */}
-                <div className="space-y-4">
-                  <div className="bg-purple-800/40 rounded-xl p-4 border border-purple-400/30">
-                    <div className="flex items-center justify-center space-x-2 mb-3">
-                      <Clock className="w-5 h-5 text-purple-300" />
-                      <span className="text-purple-100 font-semibold">Tiempo de desarrollo</span>
-                    </div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      &lt; 24 horas
-                    </div>
-                    <div className="text-purple-200 text-sm">
-                      Con pura IA generativa 🚀
-                    </div>
-                  </div>
-                  
-                  <p className="text-purple-100 leading-relaxed text-sm">
-                    Esta landing page completa fue creada usando IA generativa en menos de 24 horas. 
-                    <span className="text-purple-300 font-semibold"> Desde el concepto hasta el código final.</span>
-                  </p>
-                  
-                  <div className="flex items-center justify-center space-x-2 text-purple-300 text-xs">
-                    <Brain className="w-4 h-4" />
-                    <span>Hecho con Claude, Cursor y mucho café ☕</span>
-                  </div>
+                <div className="flex items-center justify-center space-x-2 text-purple-300 text-xs">
+                  <Brain className="w-4 h-4" />
+                  <span>Hecho con Claude, Cursor y mucho café ☕</span>
                 </div>
-                
-                {/* CTA */}
-                <div className="pt-2">
-                  <button
-                    onClick={() => setShowEasterEgg(false)}
-                    className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105"
-                  >
-                    ¡Increíble! 🤯
-                  </button>
-                </div>
+              </div>
+              
+              <div className="pt-2">
+                <button
+                  onClick={() => setShowEasterEgg(false)}
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105"
+                >
+                  ¡Increíble! 🤯
+                </button>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
       
-      {/* Floating Icons - Iconos originales */}
+      {/* Floating Icons */}
       <div className="absolute inset-0 pointer-events-none opacity-40 z-5">
         <div className="absolute top-[15%] left-[10%] w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg rotate-12 shadow-lg animate-float">
           <Crown className="w-4 h-4 text-white m-2" />
         </div>
-        
         <div className="absolute top-[20%] right-[15%] w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full shadow-lg animate-float-delayed">
           <Brain className="w-5 h-5 text-white m-2.5" />
         </div>
-        
         <div className="absolute bottom-[20%] left-[8%] w-9 h-9 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl rotate-45 shadow-lg animate-float">
           <Code className="w-4 h-4 text-white m-2.5 -rotate-45" />
         </div>
-        
         <div className="absolute top-[35%] right-[8%] w-7 h-7 bg-gradient-to-br from-purple-300 to-purple-500 rounded-full shadow-lg animate-float-delayed">
           <Sparkles className="w-3 h-3 text-white m-2" />
         </div>
-        
         <div className="absolute bottom-[30%] right-[12%] w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg -rotate-12 shadow-lg animate-float">
           <Zap className="w-4 h-4 text-white m-2" />
         </div>
@@ -331,10 +320,10 @@ const LandingPage = () => {
       
       {/* Content Overlay */}
       <div className="relative z-10 h-full flex items-center justify-center p-6">
-        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-8 items-center">
           
           {/* Columna Izquierda - Contenido Principal */}
-          <div className="space-y-5">
+          <div className="space-y-4">
             
             {/* Header Badge */}
             <div className="inline-flex items-center bg-purple-500/20 backdrop-blur-xl border border-purple-400/40 rounded-full px-4 py-2 shadow-lg">
@@ -343,7 +332,7 @@ const LandingPage = () => {
             </div>
 
             {/* Main Headline */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-2xl">
                 Deja de Usar IA.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-400">
@@ -353,24 +342,70 @@ const LandingPage = () => {
               </h1>
               
               <p className="text-base lg:text-lg text-purple-50 leading-relaxed drop-shadow-lg">
-                AI Academy es para los que no quieren quedarse atrás. Aprende a crear herramientas, automatizar procesos y usar IA con intención — sin ser programador.
+              AI Academy es para los que no quieren quedarse atrás. Aprende a crear herramientas, automatizar procesos y usar IA con intención — sin ser programador.
               </p>
+            </div>
+
+            {/* Ejemplo rotativo de herramientas - NUEVO */}
+            <div className="bg-purple-900/30 backdrop-blur-xl border border-purple-400/30 rounded-xl p-4 shadow-xl">
+              <div className="flex items-center space-x-3">
+                <div className="flex-shrink-0">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                    {React.createElement(examples[currentExample].icon, { 
+                      className: "w-5 h-5 text-white" 
+                    })}
+                  </div>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-semibold truncate">
+                    {examples[currentExample].text}
+                  </p>
+                  <p className="text-purple-300 text-sm">
+                    En {examples[currentExample].time} • Sin código
+                  </p>
+                </div>
+                <div className="flex-shrink-0">
+                  <div className="flex space-x-1">
+                    {examples.map((_, index) => (
+                      <div
+                        key={index}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                          index === currentExample ? 'bg-purple-400' : 'bg-purple-600/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Proceso de 3 pasos - NUEVO */}
+            <div className="grid grid-cols-3 gap-3">
+              <div className="text-center">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">1</div>
+                <p className="text-purple-200 text-xs">Describes</p>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">2</div>
+                <p className="text-purple-200 text-xs">IA programa</p>
+              </div>
+              <div className="text-center">
+                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">3</div>
+                <p className="text-purple-200 text-xs">Tienes tu herramienta</p>
+              </div>
             </div>
 
             {/* Compact Animated Badge */}
             <div className={`transition-all duration-1000 ${isCounterVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
               <div className="inline-flex items-center relative overflow-hidden bg-gradient-to-r from-purple-500/15 via-purple-400/20 to-purple-500/15 backdrop-blur-xl border border-purple-300/40 rounded-full px-4 py-2 shadow-xl">
-                {/* Subtle shimmer background */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300/10 to-transparent animate-shimmer"></div>
                 
                 <div className="relative flex items-center space-x-3">
-                  {/* Live indicator */}
                   <div className="flex items-center space-x-1">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                     <span className="text-xs text-purple-300 font-medium">LIVE</span>
                   </div>
                   
-                  {/* Counter */}
                   <div className="flex items-center space-x-2">
                     <Users className="w-4 h-4 text-purple-300" />
                     <span className="text-lg font-bold text-white counter-animation">
@@ -379,7 +414,6 @@ const LandingPage = () => {
                     <span className="text-purple-200 text-sm font-medium">Builders</span>
                   </div>
                   
-                  {/* Trending indicator */}
                   <div className="w-3 h-3 bg-green-400/20 rounded-full flex items-center justify-center">
                     <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce"></div>
                   </div>
@@ -387,14 +421,12 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Author Badge - Modified with click handler */}
+            {/* Author Badge */}
             <div className="flex items-center space-x-3">
               <div className="relative">
-                {/* Enhanced glow effect */}
                 <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-400/40 blur-lg animate-pulse"></div>
                 <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-300/20 blur-md"></div>
                 
-                {/* Avatar */}
                 <div className="relative w-10 h-10 rounded-full overflow-hidden shadow-2xl bg-purple-900/50 border-2 border-purple-400/60">
                   <img 
                     src="https://storage.googleapis.com/cluvi/Imagenes/Variaciones%20Mr.%20irrelevant%20(1).PNG" 
