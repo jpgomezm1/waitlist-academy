@@ -198,12 +198,17 @@ const ReferralDashboard = () => {
 
       setUserData(data);
       
-      // Identify user in Mixpanel
+      // Identify user in Mixpanel and track dashboard view
       if (data && data.email) {
         Mixpanel.identify(data.email);
         Mixpanel.people.set({
           $email: data.email,
           referral_count: data.referral_count
+        });
+        
+        // Track dashboard view
+        Mixpanel.track('Viewed Referral Dashboard', {
+          referralCode: referralCode 
         });
       }
     } catch (error) {
@@ -330,6 +335,7 @@ const ReferralDashboard = () => {
           href="https://chat.whatsapp.com/JMSMme18JN9B6zHdRC6ZGg"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => Mixpanel.track('Clicked WhatsApp CTA', { referralCode: referralCode })}
           className="group relative flex items-center bg-[#25D366] hover:bg-[#128C7E] text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
         >
           {/* Tooltip */}

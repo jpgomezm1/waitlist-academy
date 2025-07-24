@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Mail, ArrowLeft, Sparkles, Crown, CheckCircle, Gift, Users, Zap, Star, Package } from 'lucide-react';
+import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
 const ThankYou = () => {
@@ -12,6 +13,9 @@ const ThankYou = () => {
   const [showBenefits, setShowBenefits] = useState(false);
 
   useEffect(() => {
+    // Track thank you page view
+    Mixpanel.track('Viewed Thank You Page');
+    
     const timer = setTimeout(() => {
       setShowBenefits(true);
     }, 2000);

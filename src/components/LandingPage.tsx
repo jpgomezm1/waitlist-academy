@@ -23,6 +23,10 @@ const LandingPage = () => {
     if (refCode) {
       localStorage.setItem('referrer_code', refCode);
     }
+    // Track landing page view with referral source
+    Mixpanel.track('Viewed Landing Page', {
+      referral_source: refCode || 'direct'
+    });
   }, []);
 
   useEffect(() => {
