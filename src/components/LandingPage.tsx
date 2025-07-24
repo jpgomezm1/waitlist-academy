@@ -204,7 +204,7 @@ const LandingPage = () => {
       });
 
       localStorage.removeItem('referrer_code');
-      navigate('/thank-you');
+      navigate(`/thank-you?code=${data.referral_code}`);
 
       toast({
         title: data.isNew ? "¡Bienvenido al Círculo Interno!" : "¡Te damos la bienvenida de vuelta!",

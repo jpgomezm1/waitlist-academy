@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'react-router-dom';
-import { Mail, ArrowLeft, Sparkles, Crown, CheckCircle, Gift, Users, Zap, Star, Package } from 'lucide-react';
+import { useNavigate, useSearchParams, Link } from 'react-router-dom';
+import { Mail, ArrowLeft, Sparkles, Crown, CheckCircle, Gift, Users, Zap, Star, Package, ArrowRight } from 'lucide-react';
 import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
 const ThankYou = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const referralCode = searchParams.get('code');
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const animationRef = useRef(null);
@@ -214,19 +216,31 @@ const ThankYou = () => {
               </h1>
 
               <p className="text-base sm:text-lg lg:text-xl text-purple-100 leading-relaxed drop-shadow-lg max-w-xl mx-auto lg:mx-0">
-                Como parte de los primeros, tienes acceso exclusivo a nuestro <span className="text-purple-200 font-semibold">sistema de referidos</span> con beneficios increíbles.
+                Hemos enviado tu enlace de acceso a tu correo. O si lo prefieres, puedes ir directamente a tu dashboard ahora mismo.
               </p>
             </div>
+
+            {/* Dashboard CTA Button */}
+            {referralCode && (
+              <div className="flex justify-center lg:justify-start mb-4 sm:mb-6">
+                <Button asChild className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-400 hover:to-green-500 text-white font-semibold text-lg px-8 py-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300">
+                  <Link to={`/referrals?code=${referralCode}`}>
+                    <span>Ir a mi Dashboard</span>
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Link>
+                </Button>
+              </div>
+            )}
 
             {/* Email Instructions */}
             <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/40 rounded-xl p-4 sm:p-6 shadow-xl">
               <div className="flex items-center space-x-2 sm:space-x-3 mb-2 sm:mb-3">
                 <Mail className="w-4 sm:w-5 h-4 sm:h-5 text-purple-300 flex-shrink-0" />
-                <h3 className="text-sm sm:text-lg font-semibold text-white">🚨 Paso fundamental para completar tu registro</h3>
+                <h3 className="text-sm sm:text-lg font-semibold text-white">📧 Tu enlace de acceso</h3>
               </div>
               <div className="space-y-2">
                 <p className="text-purple-100 text-xs sm:text-sm">
-                  <span className="text-white font-semibold">IMPORTANTE:</span> Debes revisar tu correo electrónico y hacer clic en el enlace de confirmación para acceder a tu <span className="text-purple-200 font-semibold">dashboard personal</span> y comenzar a ganar recompensas.
+                  También hemos enviado tu enlace de dashboard personalizado por correo electrónico con todas las instrucciones.
                 </p>
                 <p className="text-purple-200 text-xs">
                   💡 Si no encuentras el correo, revisa tu carpeta de spam o promociones.
