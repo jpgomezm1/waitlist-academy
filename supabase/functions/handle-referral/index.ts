@@ -90,20 +90,19 @@ serve(async (req) => {
       throw insertError;
     }
 
-    // If user was referred, increment referrer's count
+    // Update referrer's count if they referred someone using RPC for atomicity
     if (referrer_code) {
-      const { error: updateError } = await supabase
-        .from('referrals')
-        .update({ 
-          referral_count: supabase.sql`referral_count + 1` 
-        })
-        .eq('referral_code', referrer_code);
+      console.log('Attempting to increment count for:', referrer_code);
+      const { error: rpcError } = await supabase.rpc('increment_referral_count', {
+        user_code: referrer_code,
+      });
 
-      if (updateError) {
-        console.error('Error updating referrer count:', updateError);
-        // Don't fail the whole operation if this fails
+      if (rpcError) {
+        // Log the error in detail but do not stop the execution,
+        // as creating the new user is the primary goal.
+        console.error('Error incrementing referral count via RPC:', rpcError);
       } else {
-        console.log('Updated referrer count for:', referrer_code);
+        console.log('Successfully called increment for:', referrer_code);
       }
     }
 
