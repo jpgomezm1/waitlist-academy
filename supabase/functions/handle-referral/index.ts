@@ -113,6 +113,9 @@ serve(async (req) => {
       const dashboardUrl = `https://17cea61d-d3dc-45e7-a19d-7712f98c1277.lovableproject.com/referrals?code=${newUser.referral_code}`;
       const referralUrl = `https://17cea61d-d3dc-45e7-a19d-7712f98c1277.lovableproject.com/?ref=${newUser.referral_code}`;
 
+      console.log('Attempting to send email to:', email);
+      console.log('Using domain:', Deno.env.get('DOMAIN'));
+
       const emailHtml = `
         <!DOCTYPE html>
         <html>
@@ -183,17 +186,58 @@ serve(async (req) => {
         </html>
       `;
 
-      await resend.emails.send({
-        from: 'AI Academy <hola@updates.stayirrelevant.com>',
+      // Try sending with verified domain first, fallback to sandbox if not verified
+      const domain = Deno.env.get('DOMAIN') || 'updates.stayirrelevant.com';
+      const fromAddress = `AI Academy <hola@${domain}>`;
+      
+      console.log('Sending email with from address:', fromAddress);
+
+      const emailResult = await resend.emails.send({
+        from: fromAddress,
         to: [email],
         subject: '¡Bienvenido al Círculo Interno de AI Academy! 👑',
         html: emailHtml,
       });
 
-      console.log('Welcome email sent successfully to:', email);
+      if (emailResult.error) {
+        console.error('Resend API error:', emailResult.error);
+        console.error('Error details:', JSON.stringify(emailResult.error, null, 2));
+        
+        // If domain verification error, try with sandbox domain
+        if (emailResult.error.message?.includes('domain') || emailResult.error.message?.includes('verification')) {
+          console.log('Domain verification issue, trying with sandbox domain...');
+          
+          const sandboxResult = await resend.emails.send({
+            from: 'AI Academy <onboarding@resend.dev>',
+            to: [email],
+            subject: '¡Bienvenido al Círculo Interno de AI Academy! 👑',
+            html: emailHtml,
+          });
+          
+          if (sandboxResult.error) {
+            console.error('Sandbox email also failed:', sandboxResult.error);
+            throw new Error(`Email sending failed: ${sandboxResult.error.message}`);
+          } else {
+            console.log('Email sent successfully with sandbox domain:', sandboxResult.data);
+          }
+        } else {
+          throw new Error(`Email sending failed: ${emailResult.error.message}`);
+        }
+      } else {
+        console.log('Email sent successfully with custom domain:', emailResult.data);
+      }
+
     } catch (emailError) {
       console.error('Error sending welcome email:', emailError);
-      // Don't fail the whole operation if email fails
+      console.error('Email error stack:', emailError.stack);
+      // Don't fail the whole operation if email fails, but log the error
+      return new Response(JSON.stringify({ 
+        success: true,
+        isNew: true,
+        emailError: emailError.message
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     return new Response(JSON.stringify({ 
