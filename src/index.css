@@ -9,33 +9,33 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* AI Academy Viral Campaign Colors */
-    --background: 254 58% 12%; /* #1A103C - Deep purple background */
+    --background: 254 58% 8%; /* Darker deep purple background */
     --foreground: 0 0% 100%; /* White text */
 
-    --card: 254 58% 12%;
+    --card: 254 58% 8%;
     --card-foreground: 0 0% 100%;
 
-    --popover: 254 58% 12%;
+    --popover: 254 58% 8%;
     --popover-foreground: 0 0% 100%;
 
     --primary: 145 80% 42%; /* #10B981 - CTA Green */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 254 58% 15%; /* Slightly lighter purple */
+    --secondary: 254 58% 12%; /* Slightly lighter purple */
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 254 58% 20%;
+    --muted: 254 58% 16%;
     --muted-foreground: 220 9% 46%; /* #6B7280 - Gray for inactive */
 
-    --accent: 254 58% 55%; /* #5D3FD3 - Vibrant purple */
+    --accent: 254 58% 50%; /* Slightly darker vibrant purple */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 254 58% 20%;
-    --input: 254 58% 15%;
-    --ring: 254 58% 55%;
+    --border: 254 58% 16%;
+    --input: 254 58% 12%;
+    --ring: 254 58% 50%;
 
     --radius: 0.75rem;
     

@@ -515,7 +515,7 @@ const ReferralDashboard = () => {
       </div>
 
       {/* Custom CSS */}
-      <style jsx>{`
+      <style>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-10px) rotate(3deg); }
