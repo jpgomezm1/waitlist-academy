@@ -15,7 +15,7 @@ const ThankYou = () => {
   useEffect(() => {
     // Track thank you page view
     Mixpanel.track('Viewed Thank You Page');
-    
+
     const timer = setTimeout(() => {
       setShowBenefits(true);
     }, 2000);
@@ -222,11 +222,29 @@ const ThankYou = () => {
             <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/40 rounded-xl p-6 shadow-xl">
               <div className="flex items-center space-x-3 mb-3">
                 <Mail className="w-5 h-5 text-purple-300" />
-                <h3 className="text-lg font-semibold text-white">Revisa tu correo</h3>
+                <h3 className="text-lg font-semibold text-white">🚨 Paso fundamental para completar tu registro</h3>
               </div>
-              <p className="text-purple-100 text-sm">
-                Te enviamos las instrucciones completas para acceder a tu <span className="text-purple-200 font-semibold">dashboard personal</span> y comenzar a ganar recompensas.
-              </p>
+              <div className="space-y-2">
+                <p className="text-purple-100 text-sm">
+                  <span className="text-white font-semibold">IMPORTANTE:</span> Debes revisar tu correo electrónico y hacer clic en el enlace de confirmación para acceder a tu <span className="text-purple-200 font-semibold">dashboard personal</span> y comenzar a ganar recompensas.
+                </p>
+                <p className="text-purple-200 text-xs">
+                  💡 Si no encuentras el correo, revisa tu carpeta de spam o promociones.
+                </p>
+              </div>
+            </div>
+
+            {/* Social Media */}
+            <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/40 rounded-xl p-4 shadow-xl">
+              <div className="text-center">
+                <p className="text-purple-300 text-sm mb-2">Síguenos para más contenido</p>
+                <div className="flex items-center justify-center space-x-1">
+                  <div className="bg-purple-500/20 rounded-full px-3 py-1">
+                    <span className="text-purple-200 text-sm font-medium">@irrelevantclub.co</span>
+                  </div>
+                </div>
+                <p className="text-purple-400 text-xs mt-1">Instagram • TikTok</p>
+              </div>
             </div>
 
             {/* Back Button */}

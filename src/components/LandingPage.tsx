@@ -4,18 +4,21 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Sparkles, Crown, ArrowRight, Brain, Code, Zap } from 'lucide-react';
+import { Sparkles, Crown, ArrowRight, Brain, Code, Zap, Users } from 'lucide-react';
 import { Mixpanel } from '@/lib/mixpanel';
 import * as THREE from 'three';
 
 const LandingPage = () => {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [creatorCount, setCreatorCount] = useState(150);
+  const [isCounterVisible, setIsCounterVisible] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const animationRef = useRef(null);
+  const previousCount = useRef(150);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -27,6 +30,20 @@ const LandingPage = () => {
     Mixpanel.track('Viewed Landing Page', {
       referral_source: refCode || 'direct'
     });
+
+    // Show counter after a brief delay
+    setTimeout(() => setIsCounterVisible(true), 1000);
+
+    // Simulate creator count increase
+    const interval = setInterval(() => {
+      setCreatorCount(prev => {
+        const newCount = prev + Math.floor(Math.random() * 3) + 1;
+        previousCount.current = prev;
+        return newCount;
+      });
+    }, 7000); // Increase every 7 seconds
+
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -210,7 +227,7 @@ const LandingPage = () => {
         <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-12 items-center">
           
           {/* Columna Izquierda - Contenido Principal */}
-          <div className="space-y-6">
+          <div className="space-y-5">
             
             {/* Header Badge */}
             <div className="inline-flex items-center bg-purple-500/20 backdrop-blur-xl border border-purple-400/40 rounded-full px-4 py-2 shadow-lg">
@@ -220,7 +237,7 @@ const LandingPage = () => {
 
             {/* Main Headline */}
             <div className="space-y-4">
-              <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-white leading-tight tracking-tight drop-shadow-2xl">
+              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-2xl">
                 Deja de Usar IA.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-400">
                   Empieza a Crear
@@ -228,20 +245,50 @@ const LandingPage = () => {
                 con IA.
               </h1>
               
-              <p className="text-lg lg:text-xl text-purple-50 leading-relaxed drop-shadow-lg">
+              <p className="text-base lg:text-lg text-purple-50 leading-relaxed drop-shadow-lg">
                 AI Academy es para los que no quieren quedarse atrás. Aprende a crear herramientas, automatizar procesos y usar IA con intención — sin ser programador.
               </p>
+            </div>
+
+            {/* Compact Animated Badge */}
+            <div className={`transition-all duration-1000 ${isCounterVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+              <div className="inline-flex items-center relative overflow-hidden bg-gradient-to-r from-purple-500/15 via-purple-400/20 to-purple-500/15 backdrop-blur-xl border border-purple-300/40 rounded-full px-4 py-2 shadow-xl">
+                {/* Subtle shimmer background */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300/10 to-transparent animate-shimmer"></div>
+                
+                <div className="relative flex items-center space-x-3">
+                  {/* Live indicator */}
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-purple-300 font-medium">LIVE</span>
+                  </div>
+                  
+                  {/* Counter */}
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-4 h-4 text-purple-300" />
+                    <span className="text-lg font-bold text-white counter-animation">
+                      {creatorCount}
+                    </span>
+                    <span className="text-purple-200 text-sm font-medium">Builders</span>
+                  </div>
+                  
+                  {/* Trending indicator */}
+                  <div className="w-3 h-3 bg-green-400/20 rounded-full flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce"></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Author Badge */}
             <div className="flex items-center space-x-3">
               <div className="relative">
                 {/* Enhanced glow effect */}
-                <div className="absolute inset-0 w-12 h-12 rounded-full bg-purple-400/40 blur-lg animate-pulse"></div>
-                <div className="absolute inset-0 w-12 h-12 rounded-full bg-purple-300/20 blur-md"></div>
+                <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-400/40 blur-lg animate-pulse"></div>
+                <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-300/20 blur-md"></div>
                 
                 {/* Avatar */}
-                <div className="relative w-12 h-12 rounded-full overflow-hidden shadow-2xl bg-purple-900/50 border-2 border-purple-400/60">
+                <div className="relative w-10 h-10 rounded-full overflow-hidden shadow-2xl bg-purple-900/50 border-2 border-purple-400/60">
                   <img 
                     src="https://storage.googleapis.com/cluvi/Imagenes/Variaciones%20Mr.%20irrelevant%20(1).PNG" 
                     alt="irrelevant avatar" 
@@ -255,7 +302,7 @@ const LandingPage = () => {
                   <img 
                     src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" 
                     alt="irrelevant logo" 
-                    className="h-6 w-auto drop-shadow-lg"
+                    className="h-5 w-auto drop-shadow-lg"
                   />
                 </div>
               </div>
@@ -264,8 +311,8 @@ const LandingPage = () => {
 
           {/* Columna Derecha - Formulario */}
           <div className="lg:max-w-lg">
-            <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/30 rounded-2xl p-6 lg:p-8 shadow-2xl">
-              <div className="space-y-5">
+            <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/30 rounded-2xl p-6 lg:p-7 shadow-2xl">
+              <div className="space-y-4">
                 <div className="text-center space-y-2">
                   <h3 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
                     Únete a la waitlist
@@ -299,8 +346,6 @@ const LandingPage = () => {
                     )}
                   </Button>
                 </form>
-                
-
               </div>
             </div>
           </div>
@@ -319,6 +364,16 @@ const LandingPage = () => {
           50% { transform: translateY(-8px) rotate(-3deg); }
         }
         
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+        
+        @keyframes countUp {
+          0% { transform: translateY(10px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
+        }
+        
         .animate-float {
           animation: float 8s ease-in-out infinite;
         }
@@ -326,6 +381,14 @@ const LandingPage = () => {
         .animate-float-delayed {
           animation: float-delayed 10s ease-in-out infinite;
           animation-delay: 3s;
+        }
+        
+        .animate-shimmer {
+          animation: shimmer 4s ease-in-out infinite;
+        }
+        
+        .counter-animation {
+          animation: countUp 0.5s ease-out;
         }
       `}</style>
     </div>
