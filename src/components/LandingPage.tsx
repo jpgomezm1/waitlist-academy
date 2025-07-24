@@ -104,8 +104,9 @@ const LandingPage = () => {
     mountRef.current.appendChild(renderer.domElement);
     sceneRef.current = { scene, camera, renderer };
 
-    // Particle system
-    const particleCount = 150;
+    // Particle system - Reduced for mobile performance
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 50 : 150;
     const particles = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
@@ -126,9 +127,9 @@ const LandingPage = () => {
     particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
     
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.1,
+      size: isMobile ? 0.08 : 0.1,
       transparent: true,
-      opacity: 0.6,
+      opacity: isMobile ? 0.4 : 0.6,
       vertexColors: true,
       blending: THREE.AdditiveBlending
     });
@@ -161,9 +162,10 @@ const LandingPage = () => {
       particleSystem.geometry.attributes.position.needsUpdate = true;
       particleSystem.rotation.y += 0.001;
       
-      // Subtle camera movement
-      camera.position.x += (mouse.x * 1 - camera.position.x) * 0.02;
-      camera.position.y += (-mouse.y * 1 - camera.position.y) * 0.02;
+      // Subtle camera movement - Reduced on mobile
+      const cameraMovement = isMobile ? 0.01 : 0.02;
+      camera.position.x += (mouse.x * 1 - camera.position.x) * cameraMovement;
+      camera.position.y += (-mouse.y * 1 - camera.position.y) * cameraMovement;
       camera.lookAt(scene.position);
       
       renderer.render(scene, camera);
@@ -238,50 +240,50 @@ const LandingPage = () => {
   };
 
   return (
-    <div className="h-screen relative overflow-hidden bg-gradient-to-br from-[#1a0b2e] via-[#2d1b4e] to-[#0f0518]">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1a0b2e] via-[#2d1b4e] to-[#0f0518]">
       {/* Three.js Canvas */}
       <div ref={mountRef} className="absolute inset-0 z-0" />
       
       {/* Easter Egg Modal */}
       {showEasterEgg && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-8 max-w-md w-full shadow-2xl animate-scale-in relative overflow-hidden">
+          <div className="bg-gradient-to-br from-purple-900/90 via-purple-800/90 to-purple-900/90 backdrop-blur-xl border border-purple-400/50 rounded-2xl p-6 sm:p-8 max-w-sm sm:max-w-md w-full shadow-2xl animate-scale-in relative overflow-hidden">
             <button
               onClick={() => setShowEasterEgg(false)}
-              className="absolute top-4 right-4 p-2 text-purple-300 hover:text-white transition-colors duration-200 hover:bg-purple-700/50 rounded-full"
+              className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 text-purple-300 hover:text-white transition-colors duration-200 hover:bg-purple-700/50 rounded-full"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
             
-            <div className="relative space-y-6 text-center">
+            <div className="relative space-y-4 sm:space-y-6 text-center">
               <div className="flex justify-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
-                  <Cpu className="w-8 h-8 text-white" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                  <Cpu className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               </div>
               
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold text-white">🤖 Plot Twist!</h3>
-                <div className="w-16 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto"></div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white">🤖 Plot Twist!</h3>
+                <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full mx-auto"></div>
               </div>
               
-              <div className="space-y-4">
-                <div className="bg-purple-800/40 rounded-xl p-4 border border-purple-400/30">
-                  <div className="flex items-center justify-center space-x-2 mb-3">
-                    <Clock className="w-5 h-5 text-purple-300" />
-                    <span className="text-purple-100 font-semibold">Tiempo de desarrollo</span>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="bg-purple-800/40 rounded-xl p-3 sm:p-4 border border-purple-400/30">
+                  <div className="flex items-center justify-center space-x-2 mb-2 sm:mb-3">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-purple-300" />
+                    <span className="text-purple-100 font-semibold text-sm sm:text-base">Tiempo de desarrollo</span>
                   </div>
-                  <div className="text-3xl font-bold text-white mb-1">&lt; 24 horas</div>
-                  <div className="text-purple-200 text-sm">Con pura IA generativa 🚀</div>
+                  <div className="text-2xl sm:text-3xl font-bold text-white mb-1">&lt; 24 horas</div>
+                  <div className="text-purple-200 text-xs sm:text-sm">Con pura IA generativa 🚀</div>
                 </div>
                 
-                <p className="text-purple-100 leading-relaxed text-sm">
+                <p className="text-purple-100 leading-relaxed text-xs sm:text-sm">
                   Esta landing page completa fue creada usando IA generativa en menos de 24 horas. 
                   <span className="text-purple-300 font-semibold"> Desde el concepto hasta el código final.</span>
                 </p>
                 
                 <div className="flex items-center justify-center space-x-2 text-purple-300 text-xs">
-                  <Brain className="w-4 h-4" />
+                  <Brain className="w-3 h-3 sm:w-4 sm:h-4" />
                   <span>Hecho con Claude, Cursor y mucho café ☕</span>
                 </div>
               </div>
@@ -289,7 +291,7 @@ const LandingPage = () => {
               <div className="pt-2">
                 <button
                   onClick={() => setShowEasterEgg(false)}
-                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105"
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full font-semibold transition-all duration-300 shadow-lg hover:shadow-purple-500/30 transform hover:scale-105 text-sm sm:text-base"
                 >
                   ¡Increíble! 🤯
                 </button>
@@ -299,8 +301,8 @@ const LandingPage = () => {
         </div>
       )}
       
-      {/* Floating Icons */}
-      <div className="absolute inset-0 pointer-events-none opacity-40 z-5">
+      {/* Floating Icons - Hidden on small screens for cleaner look */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 z-5 hidden sm:block">
         <div className="absolute top-[15%] left-[10%] w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg rotate-12 shadow-lg animate-float">
           <Crown className="w-4 h-4 text-white m-2" />
         </div>
@@ -319,21 +321,21 @@ const LandingPage = () => {
       </div>
       
       {/* Content Overlay */}
-      <div className="relative z-10 h-full flex items-center justify-center p-6">
-        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-8 items-center">
+      <div className="relative z-10 min-h-screen flex items-center justify-center p-4 sm:p-6">
+        <div className="max-w-7xl w-full grid lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           
           {/* Columna Izquierda - Contenido Principal */}
-          <div className="space-y-4">
+          <div className="space-y-4 sm:space-y-6 order-1 lg:order-1">
             
             {/* Header Badge */}
-            <div className="inline-flex items-center bg-purple-500/20 backdrop-blur-xl border border-purple-400/40 rounded-full px-4 py-2 shadow-lg">
-              <Crown className="w-4 h-4 mr-2 text-purple-300" />
-              <span className="text-purple-200 text-sm font-medium">AI Academy</span>
+            <div className="inline-flex items-center bg-purple-500/20 backdrop-blur-xl border border-purple-400/40 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shadow-lg">
+              <Crown className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 text-purple-300" />
+              <span className="text-purple-200 text-xs sm:text-sm font-medium">AI Academy</span>
             </div>
 
             {/* Main Headline */}
-            <div className="space-y-3">
-              <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-2xl">
+            <div className="space-y-3 sm:space-y-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white leading-tight tracking-tight drop-shadow-2xl">
                 Deja de Usar IA.{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-300 via-purple-200 to-purple-400">
                   Empieza a Crear
@@ -341,26 +343,26 @@ const LandingPage = () => {
                 con IA.
               </h1>
               
-              <p className="text-base lg:text-lg text-purple-50 leading-relaxed drop-shadow-lg">
+              <p className="text-sm sm:text-base lg:text-lg text-purple-50 leading-relaxed drop-shadow-lg">
               AI Academy es para los que no quieren quedarse atrás. Aprende a crear herramientas, automatizar procesos y usar IA con intención — sin ser programador.
               </p>
             </div>
 
-            {/* Ejemplo rotativo de herramientas - NUEVO */}
-            <div className="bg-purple-900/30 backdrop-blur-xl border border-purple-400/30 rounded-xl p-4 shadow-xl">
-              <div className="flex items-center space-x-3">
+            {/* Ejemplo rotativo de herramientas */}
+            <div className="bg-purple-900/30 backdrop-blur-xl border border-purple-400/30 rounded-xl p-3 sm:p-4 shadow-xl">
+              <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center">
                     {React.createElement(examples[currentExample].icon, { 
-                      className: "w-5 h-5 text-white" 
+                      className: "w-4 h-4 sm:w-5 sm:h-5 text-white" 
                     })}
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-semibold truncate">
+                  <p className="text-white font-semibold truncate text-sm sm:text-base">
                     {examples[currentExample].text}
                   </p>
-                  <p className="text-purple-300 text-sm">
+                  <p className="text-purple-300 text-xs sm:text-sm">
                     En {examples[currentExample].time} • Sin código
                   </p>
                 </div>
@@ -369,7 +371,7 @@ const LandingPage = () => {
                     {examples.map((_, index) => (
                       <div
                         key={index}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                        className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300 ${
                           index === currentExample ? 'bg-purple-400' : 'bg-purple-600/50'
                         }`}
                       />
@@ -379,55 +381,55 @@ const LandingPage = () => {
               </div>
             </div>
 
-            {/* Proceso de 3 pasos - NUEVO */}
-            <div className="grid grid-cols-3 gap-3">
+            {/* Proceso de 3 pasos */}
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <div className="text-center">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">1</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm mb-1.5 sm:mb-2 mx-auto">1</div>
                 <p className="text-purple-200 text-xs">Describes</p>
               </div>
               <div className="text-center">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">2</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm mb-1.5 sm:mb-2 mx-auto">2</div>
                 <p className="text-purple-200 text-xs">IA programa</p>
               </div>
               <div className="text-center">
-                <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm mb-2 mx-auto">3</div>
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm mb-1.5 sm:mb-2 mx-auto">3</div>
                 <p className="text-purple-200 text-xs">Tienes tu herramienta</p>
               </div>
             </div>
 
             {/* Compact Animated Badge */}
             <div className={`transition-all duration-1000 ${isCounterVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-              <div className="inline-flex items-center relative overflow-hidden bg-gradient-to-r from-purple-500/15 via-purple-400/20 to-purple-500/15 backdrop-blur-xl border border-purple-300/40 rounded-full px-4 py-2 shadow-xl">
+              <div className="inline-flex items-center relative overflow-hidden bg-gradient-to-r from-purple-500/15 via-purple-400/20 to-purple-500/15 backdrop-blur-xl border border-purple-300/40 rounded-full px-3 sm:px-4 py-1.5 sm:py-2 shadow-xl">
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300/10 to-transparent animate-shimmer"></div>
                 
-                <div className="relative flex items-center space-x-3">
+                <div className="relative flex items-center space-x-2 sm:space-x-3">
                   <div className="flex items-center space-x-1">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-400 rounded-full animate-pulse"></div>
                     <span className="text-xs text-purple-300 font-medium">LIVE</span>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-4 h-4 text-purple-300" />
-                    <span className="text-lg font-bold text-white counter-animation">
+                  <div className="flex items-center space-x-1 sm:space-x-2">
+                    <Users className="w-3 h-3 sm:w-4 sm:h-4 text-purple-300" />
+                    <span className="text-base sm:text-lg font-bold text-white counter-animation">
                       {creatorCount}
                     </span>
-                    <span className="text-purple-200 text-sm font-medium">Builders</span>
+                    <span className="text-purple-200 text-xs sm:text-sm font-medium">Builders</span>
                   </div>
                   
-                  <div className="w-3 h-3 bg-green-400/20 rounded-full flex items-center justify-center">
-                    <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-bounce"></div>
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-400/20 rounded-full flex items-center justify-center">
+                    <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-green-400 rounded-full animate-bounce"></div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Author Badge */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3">
               <div className="relative">
-                <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-400/40 blur-lg animate-pulse"></div>
-                <div className="absolute inset-0 w-10 h-10 rounded-full bg-purple-300/20 blur-md"></div>
+                <div className="absolute inset-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-400/40 blur-lg animate-pulse"></div>
+                <div className="absolute inset-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-purple-300/20 blur-md"></div>
                 
-                <div className="relative w-10 h-10 rounded-full overflow-hidden shadow-2xl bg-purple-900/50 border-2 border-purple-400/60">
+                <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden shadow-2xl bg-purple-900/50 border-2 border-purple-400/60">
                   <img 
                     src="https://storage.googleapis.com/cluvi/Imagenes/Variaciones%20Mr.%20irrelevant%20(1).PNG" 
                     alt="irrelevant avatar" 
@@ -436,12 +438,12 @@ const LandingPage = () => {
                 </div>
               </div>
               <div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-white font-semibold text-sm drop-shadow-lg">A course from</span>
+                <div className="flex items-center space-x-1.5 sm:space-x-2">
+                  <span className="text-white font-semibold text-xs sm:text-sm drop-shadow-lg">A course from</span>
                   <img 
                     src="https://storage.googleapis.com/cluvi/nuevo_irre-removebg-preview.png" 
                     alt="irrelevant logo" 
-                    className="h-5 w-auto drop-shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200"
+                    className="h-4 sm:h-5 w-auto drop-shadow-lg cursor-pointer hover:scale-110 transition-transform duration-200"
                     onClick={handleLogoClick}
                     title="¿Tienes curiosidad? 🤔"
                   />
@@ -451,38 +453,38 @@ const LandingPage = () => {
           </div>
 
           {/* Columna Derecha - Formulario */}
-          <div className="lg:max-w-lg">
-            <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/30 rounded-2xl p-6 lg:p-7 shadow-2xl">
-              <div className="space-y-4">
+          <div className="order-2 lg:order-2 lg:max-w-lg w-full">
+            <div className="bg-purple-900/30 backdrop-blur-2xl border border-purple-400/30 rounded-2xl p-5 sm:p-6 lg:p-7 shadow-2xl">
+              <div className="space-y-4 sm:space-y-5">
                 <div className="text-center space-y-2">
-                  <h3 className="text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white drop-shadow-lg">
                     Únete a la waitlist
                   </h3>
-                  <p className="text-purple-100 text-sm lg:text-base">
+                  <p className="text-purple-100 text-xs sm:text-sm lg:text-base">
                     Acceso anticipado y contenido exclusivo antes del lanzamiento.
                   </p>
                 </div>
                 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <Input
                     type="email"
                     placeholder="tu@email.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12 text-base bg-purple-800/40 backdrop-blur-sm border-purple-300/40 focus:border-purple-300 text-white placeholder:text-purple-200 rounded-lg px-4 shadow-xl"
+                    className="h-10 sm:h-12 text-sm sm:text-base bg-purple-800/40 backdrop-blur-sm border-purple-300/40 focus:border-purple-300 text-white placeholder:text-purple-200 rounded-lg px-3 sm:px-4 shadow-xl"
                     required
                   />
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="w-full h-12 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 border-0 rounded-lg transition-all duration-300 shadow-2xl hover:shadow-purple-500/30 font-semibold transform hover:scale-105"
+                    className="w-full h-10 sm:h-12 bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-400 hover:to-purple-500 border-0 rounded-lg transition-all duration-300 shadow-2xl hover:shadow-purple-500/30 font-semibold transform hover:scale-105 text-sm sm:text-base"
                   >
                     {isLoading ? (
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <div className="flex items-center space-x-2">
                         <span>Quiero Unirme</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4" />
                       </div>
                     )}
                   </Button>
