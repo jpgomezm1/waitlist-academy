@@ -216,7 +216,7 @@ const LandingPage = () => {
               </h1>
               
               <p className="text-lg lg:text-xl text-purple-50 leading-relaxed drop-shadow-lg">
-                Aprende a <span className="text-purple-200 font-semibold">automatizar tareas</span>, <span className="text-purple-100 font-semibold">crear código sin programar</span> y <span className="text-purple-200 font-semibold">multiplicar tu productividad</span> con el método que está revolucionando el mundo.
+                AI Academy es para los que no quieren quedarse atrás. Aprende a crear herramientas, automatizar procesos y usar IA con intención — sin ser programador.
               </p>
             </div>
 
@@ -280,16 +280,14 @@ const LandingPage = () => {
                       <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                     ) : (
                       <div className="flex items-center space-x-2">
-                        <span>Apuntarme</span>
+                        <span>Quiero Unirme</span>
                         <ArrowRight className="w-4 h-4" />
                       </div>
                     )}
                   </Button>
                 </form>
                 
-                <p className="text-center text-purple-200 text-xs">
-                  Sin spam, sin tonterías. Te puedes desuscribir cuando quieras.
-                </p>
+
               </div>
             </div>
           </div>

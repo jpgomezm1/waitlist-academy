@@ -273,8 +273,8 @@ const ThankYou = () => {
                     <Package className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-white">3 Referidos</h4>
-                    <p className="text-purple-200 text-sm">Stack de herramientas</p>
+                    <h4 className="font-bold text-white">4 Referidos</h4>
+                    <p className="text-purple-200 text-sm">1 Sesión grabada con caso de uso real</p>
                   </div>
                 </div>
 
@@ -283,8 +283,8 @@ const ThankYou = () => {
                     <Zap className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-white">5 Referidos</h4>
-                    <p className="text-purple-200 text-sm">30% Descuento Completo</p>
+                    <h4 className="font-bold text-white">7 Referidos</h4>
+                    <p className="text-purple-200 text-sm">50% Descuento Primer Mes</p>
                   </div>
                 </div>
 
@@ -294,7 +294,7 @@ const ThankYou = () => {
                   </div>
                   <div>
                     <h4 className="font-bold text-white">12 Referidos</h4>
-                    <p className="text-purple-200 text-sm">1 Año GRATIS Completo</p>
+                    <p className="text-purple-200 text-sm">3 meses GRATIS</p>
                   </div>
                 </div>
               </div>

@@ -146,7 +146,7 @@ serve(async (req) => {
               </div>
               
               <h1 style="color: #ffffff; font-size: 32px; font-weight: 700; margin: 0; line-height: 1.2; text-shadow: 0 4px 20px rgba(147, 51, 234, 0.3);">
-                ¡Bienvenido al Círculo Interno!
+                ¡Bienvenido al Club!
               </h1>
             </div>
 
@@ -309,7 +309,7 @@ serve(async (req) => {
       const emailResult = await resend.emails.send({
         from: fromAddress,
         to: [email],
-        subject: '¡Bienvenido al Círculo Interno de AI Academy! 🎁',
+        subject: '¡Bienvenido al Club de AI Academy! 🎁',
         html: emailHtml,
       });
 

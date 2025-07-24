@@ -26,29 +26,29 @@ const rewards: Reward[] = [
   {
     id: 1,
     threshold: 1,
-    title: "20 Prompts Esenciales",
-    description: "PDF con los prompts más efectivos",
+    title: "1 Referido",
+    description: "20 Prompts Esenciales PDF",
     icon: FileText
   },
   {
     id: 2,
-    threshold: 3,
-    title: "Stack de Herramientas",
-    description: "Herramientas exclusivas por correo",
+    threshold: 4,
+    title: "4 Referidos",
+    description: "1 Sesión grabada con caso de uso real",
     icon: Package
   },
   {
     id: 3,
-    threshold: 5,
-    title: "30% de Descuento",
-    description: "En toda la AI Academy",
+    threshold: 7,
+    title: "7 Referidos",
+    description: "50% Descuento Primer Mes",
     icon: Percent
   },
   {
     id: 4,
     threshold: 12,
-    title: "1 Año GRATIS",
-    description: "Acceso completo sin costo",
+    title: "12 Referidos",
+    description: "3 meses GRATIS",
     icon: Calendar
   }
 ];
@@ -127,8 +127,8 @@ const ReferralDashboard = () => {
 
       const positions = particleSystem.geometry.attributes.position.array;
       for (let i = 0; i < positions.length; i += 3) {
-        positions[i + 1] += Math.sin(time * 0.5 + positions[i] * 0.01) * 0.02;
-        positions[i] += Math.cos(time * 0.3 + positions[i + 1] * 0.01) * 0.01;
+        positions[i + 1] += Math.sin(time * 0.5 + positions[i] * 0.02) * 0.02;
+        positions[i] += Math.cos(time * 0.3 + positions[i + 1] * 0.02) * 0.01;
       }
       particleSystem.geometry.attributes.position.needsUpdate = true;
       particleSystem.rotation.y += 0.001;
@@ -310,7 +310,6 @@ const ReferralDashboard = () => {
 
       {/* WhatsApp Floating Button */}
       <div className="absolute bottom-6 right-6 z-20">
-        {/* The missing <a> tag was here */}
         <a
           href="https://chat.whatsapp.com/JMSMme18JN9B6zHdRC6ZGg"
           target="_blank"
@@ -390,7 +389,7 @@ const ReferralDashboard = () => {
                 </div>
               </div>
               <h3 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">VIP</h3>
-              <p className="text-purple-200 font-medium">Estado del Miembro</p>
+              <p className="text-purple-200 font-medium">Status en el Club</p>
             </div>
           </div>
 
@@ -494,7 +493,7 @@ const ReferralDashboard = () => {
                             ></div>
                           </div>
                           <div className="text-xs text-purple-300 font-medium">
-                            {userData.referral_count}/{reward.threshold} amigos
+                            {userData.referral_count}/{reward.threshold} referidos
                           </div>
                         </div>
                       )}
